@@ -1,0 +1,56 @@
+[package]
+name = "fantasy"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies.bevy]
+version = "0.8.1"
+default-features = false
+features = [
+    "bevy_asset",
+    "bevy_scene",
+    "bevy_winit",
+    "animation",
+    "x11",
+    "wayland",
+
+    "bevy_render",
+    "bevy_core_pipeline",
+    "bevy_sprite",
+    "bevy_text",
+    "bevy_ui",
+
+    "png",
+    "ktx2",
+    "zstd"
+]
+
+[dependencies.bevy_kira_audio]
+version = "0.12"
+default-features = false
+features = [
+    "ogg"
+]
+
+[dependencies.bevy_asset_loader]
+version = "0.12"
+features = [
+    "2d",
+    "stageless",
+    "progress_tracking",
+    "progress_tracking_stageless"
+]
+
+[dependencies]
+bevy_embedded_assets = "0.4"
+bevy_ecs_ldtk = "0.4"
+iyes_loopless = "0.7"
+iyes_progress = "0.5"
+winit = "0.26.1"
+
+[build-dependencies]
+embed-resource = "1.6.3"
+
+[features]
+default = ["dev"]
+dev = ["bevy/dynamic"]
