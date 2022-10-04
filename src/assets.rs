@@ -13,7 +13,9 @@ use winit::window::Icon;
 
 use super::state::*;
 
+#[derive(Deref, DerefMut)]
 pub struct GameAtlas(Handle<TextureAtlas>);
+#[derive(Deref, DerefMut)]
 pub struct GameWorld(Handle<LdtkAsset>);
 
 pub struct GameAssetsPlugin;
