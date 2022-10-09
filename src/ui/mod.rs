@@ -1,10 +1,9 @@
-use bevy::prelude::*;
-
 pub mod menu;
 
 mod func;
 pub use func::*;
 
+use bevy::prelude::*;
 use menu::MenuUiRegistry;
 
 pub struct UiRegistry;

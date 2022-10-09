@@ -8,7 +8,7 @@ use iyes_loopless::prelude::*;
 
 use crate::{
     GameFonts,
-    GameState, RunState
+    GameState
 };
 
 use super::InteractColor;
@@ -163,7 +163,7 @@ pub fn update_buttons(
     for (interaction, button) in &buttons {
         if *interaction == Interaction::Clicked {
             match *button {
-                MenuButton::Play => commands.insert_resource(NextState(GameState::Running(RunState::InGame(true)))),
+                MenuButton::Play => commands.insert_resource(NextState(GameState::InGame)),
                 MenuButton::Options => {},
                 MenuButton::Exit => exit.send(AppExit)
             }
@@ -175,8 +175,8 @@ pub struct MenuUiRegistry;
 impl Plugin for MenuUiRegistry {
     fn build(&self, app: &mut App) {
         app
-            .add_enter_system(GameState::Running(RunState::Menu), init)
-            .add_exit_system(GameState::Running(RunState::Menu), dispose)
-            .add_system(update_buttons.run_in_state(GameState::Running(RunState::Menu)));
+            .add_enter_system(GameState::Menu, init)
+            .add_exit_system(GameState::Menu, dispose)
+            .add_system(update_buttons.run_in_state(GameState::Menu));
     }
 }

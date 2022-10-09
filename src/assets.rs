@@ -11,7 +11,7 @@ use iyes_loopless::prelude::*;
 use iyes_progress::{ProgressPlugin};
 use winit::window::Icon;
 
-use super::state::*;
+use super::GameState;
 
 #[derive(Deref, DerefMut)]
 pub struct GameAtlas(pub Handle<TextureAtlas>);
@@ -31,7 +31,7 @@ impl Plugin for AssetsRegistry {
                 .with_collection::<GamePreAssets>()
             )
             .add_loading_state(LoadingState::new(GameState::Loading)
-                .continue_to_state(GameState::Running(RunState::Menu))
+                .continue_to_state(GameState::Menu)
                 .with_collection::<GameAssets>()
             )
 

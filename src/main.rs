@@ -1,16 +1,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use bevy::prelude::*;
-
 pub mod logic;
 pub mod ui;
 
 mod assets;
 mod game;
-mod state;
 pub use assets::*;
 pub use game::*;
-pub use state::*;
+
+use bevy::prelude::*;
 
 fn main() {
     App::new()

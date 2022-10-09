@@ -17,7 +17,6 @@ use iyes_loopless::prelude::*;
 
 use super::{
     AssetsRegistry,
-    GameState,
 
     logic::LogicRegistry,
     ui::UiRegistry
@@ -59,13 +58,19 @@ impl Plugin for GamePlugin {
             .add_plugin(LogicRegistry)
             .add_plugin(UiRegistry)
 
-            .add_exit_system(GameState::PreLoading, setup);
+            .add_exit_system(GameState::PreLoading, |mut commands: Commands| {
+                let mut cam = Camera2dBundle::default();
+                cam.projection.scale = 1.0 / 3.0;
+
+                commands.spawn_bundle(cam);
+            });
     }
 }
 
-fn setup(mut commands: Commands) {
-    let mut cam = Camera2dBundle::default();
-    cam.projection.scale = 1.0 / 3.0;
-
-    commands.spawn_bundle(cam);
+#[derive(Clone, Eq, PartialEq, Debug, Hash)]
+pub enum GameState {
+    PreLoading,
+    Loading,
+    Menu,
+    InGame
 }
