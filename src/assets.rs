@@ -14,12 +14,15 @@ use winit::window::Icon;
 use super::state::*;
 
 #[derive(Deref, DerefMut)]
-pub struct GameAtlas(Handle<TextureAtlas>);
+pub struct GameAtlas(pub Handle<TextureAtlas>);
 #[derive(Deref, DerefMut)]
-pub struct GameWorld(Handle<LdtkAsset>);
+pub struct GameWorld(pub Handle<LdtkAsset>);
+pub struct GameFonts {
+    pub script: Handle<Font>
+}
 
-pub struct GameAssetsPlugin;
-impl Plugin for GameAssetsPlugin {
+pub struct AssetsRegistry;
+impl Plugin for AssetsRegistry {
     fn build(&self, app: &mut App) {
         app
             .add_loopless_state(GameState::PreLoading)
@@ -68,6 +71,10 @@ fn loaded(
 
     commands.insert_resource(GameWorld(assets.world.clone()));
 
+    commands.insert_resource(GameFonts {
+        script: assets.font_script.clone()
+    });
+
     commands.remove_resource::<GamePreAssets>();
     commands.remove_resource::<GameAssets>();
 }
@@ -82,6 +89,10 @@ struct GamePreAssets {
 struct GameAssets {
     #[asset(path = "sprites", collection(typed))]
     all_sprites: Vec<Handle<Image>>,
+
     #[asset(path = "world.ldtk")]
-    world: Handle<LdtkAsset>
+    world: Handle<LdtkAsset>,
+
+    #[asset(path = "fonts/press_start.ttf")]
+    font_script: Handle<Font>
 }
