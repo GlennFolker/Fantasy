@@ -51,6 +51,7 @@ features = [
 bevy_embedded_assets = "0.4"
 iyes_loopless = "0.7"
 iyes_progress = "0.5"
+leafwing-input-manager = "0.5.2"
 winit = "0.26.1"
 
 [build-dependencies]

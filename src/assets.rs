@@ -25,7 +25,6 @@ pub struct AssetsRegistry;
 impl Plugin for AssetsRegistry {
     fn build(&self, app: &mut App) {
         app
-            .add_loopless_state(GameState::PreLoading)
             .add_loading_state(LoadingState::new(GameState::PreLoading)
                 .continue_to_state(GameState::Loading)
                 .with_collection::<GamePreAssets>()

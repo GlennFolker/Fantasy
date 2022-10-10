@@ -16,7 +16,7 @@ use bevy_kira_audio::prelude::*;
 use iyes_loopless::prelude::*;
 
 use super::{
-    AssetsRegistry,
+    AssetsRegistry, InputRegistry,
 
     logic::LogicRegistry,
     ui::UiRegistry
@@ -48,13 +48,15 @@ impl Plugin for GamePlugin {
             })
             .insert_resource(ImageSettings::default_nearest())
 
+            .add_loopless_state(GameState::PreLoading)
             .add_plugins_with(DefaultPlugins, |group| {
                 group.add_before::<AssetPlugin, _>(EmbeddedAssetPlugin)
             })
-            .add_plugin(LdtkPlugin)
             .add_plugin(AudioPlugin)
+            .add_plugin(LdtkPlugin)
 
             .add_plugin(AssetsRegistry)
+            .add_plugin(InputRegistry)
             .add_plugin(LogicRegistry)
             .add_plugin(UiRegistry)
 
