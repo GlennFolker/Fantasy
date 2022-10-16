@@ -1,17 +1,14 @@
-use bevy::{
-    prelude::*,
+use crate::incl::*;
 
-    app::AppExit
-};
-
-use iyes_loopless::prelude::*;
-
-use crate::{
-    GameFonts,
-    GameState
-};
-
-use super::InteractColor;
+pub struct MenuUiRegistry;
+impl Plugin for MenuUiRegistry {
+    fn build(&self, app: &mut App) {
+        app
+            .add_enter_system(FState::Menu, sys_init)
+            .add_exit_system(FState::Menu, sys_dispose)
+            .add_system(sys_update_buttons.run_in_state(FState::Menu));
+    }
+}
 
 #[derive(Component, Debug, Hash)]
 #[component(storage = "SparseSet")]
@@ -24,13 +21,7 @@ pub enum MenuButton {
     Exit
 }
 
-const BUTTON_COLOR: InteractColor = InteractColor {
-    normal: Color::rgb(0.15, 0.15, 0.15),
-    clicked: Some(Color::rgb(0.25, 0.25, 0.25)),
-    hovered: Some(Color::rgb(0.35, 0.75, 0.35))
-};
-
-pub fn init(mut commands: Commands, fonts: Res<GameFonts>) {
+pub fn sys_init(mut commands: Commands, fonts: Res<GameFonts>) {
     commands
         .spawn_bundle(NodeBundle {
             style: Style {
@@ -87,13 +78,23 @@ pub fn init(mut commands: Commands, fonts: Res<GameFonts>) {
                 ..default()
             };
 
+            let button_color = UiInteractColBundle {
+                col: UiInteractCol {
+                    normal: Color::rgb(0.15, 0.15, 0.15),
+                    clicked: Some(Color::rgb(0.25, 0.25, 0.25)),
+                    hovered: Some(Color::rgb(0.35, 0.75, 0.35))
+                },
+                ..default()
+            };
+
             parent
                 .spawn_bundle(ButtonBundle {
                     style: button_style.clone(),
                     ..default()
                 })
-                .insert(BUTTON_COLOR)
+                .insert_bundle(button_color.clone())
                 .insert(MenuButton::Play)
+                .insert(UiInteract::default())
                 .with_children(|parent| {
                     parent.spawn_bundle(
                         TextBundle::from_section(
@@ -109,8 +110,9 @@ pub fn init(mut commands: Commands, fonts: Res<GameFonts>) {
                     style: button_style.clone(),
                     ..default()
                 })
-                .insert(BUTTON_COLOR)
+                .insert_bundle(button_color.clone())
                 .insert(MenuButton::Options)
+                .insert(UiInteract::default())
                 .with_children(|parent| {
                     parent.spawn_bundle(
                         TextBundle::from_section(
@@ -126,8 +128,9 @@ pub fn init(mut commands: Commands, fonts: Res<GameFonts>) {
                     style: button_style.clone(),
                     ..default()
                 })
-                .insert(BUTTON_COLOR)
+                .insert_bundle(button_color.clone())
                 .insert(MenuButton::Exit)
+                .insert(UiInteract::default())
                 .with_children(|parent| {
                     parent.spawn_bundle(
                         TextBundle::from_section(
@@ -149,34 +152,24 @@ pub fn init(mut commands: Commands, fonts: Res<GameFonts>) {
         });
 }
 
-pub fn dispose(mut commands: Commands, menu_uis: Query<Entity, With<MenuUi>>) {
+pub fn sys_dispose(mut commands: Commands, menu_uis: Query<Entity, With<MenuUi>>) {
     for entity in &menu_uis {
         commands.entity(entity).despawn_recursive();
     }
 }
 
-pub fn update_buttons(
+pub fn sys_update_buttons(
     mut commands: Commands,
-    buttons: Query<(&Interaction, &MenuButton), Changed<Interaction>>,
+    buttons: Query<(&UiInteract, &MenuButton), Changed<UiInteract>>,
     mut exit: EventWriter<AppExit>
 ) {
     for (interaction, button) in &buttons {
-        if *interaction == Interaction::Clicked {
+        if interaction.clicked() {
             match *button {
-                MenuButton::Play => commands.insert_resource(NextState(GameState::InGame)),
+                MenuButton::Play => commands.insert_resource(NextState(FState::InGame)),
                 MenuButton::Options => {},
                 MenuButton::Exit => exit.send(AppExit)
             }
         }
-    }
-}
-
-pub struct MenuUiRegistry;
-impl Plugin for MenuUiRegistry {
-    fn build(&self, app: &mut App) {
-        app
-            .add_enter_system(GameState::Menu, init)
-            .add_exit_system(GameState::Menu, dispose)
-            .add_system(update_buttons.run_in_state(GameState::Menu));
     }
 }

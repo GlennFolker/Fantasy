@@ -1,12 +1,11 @@
 mod player;
 pub use player::*;
 
-use bevy::prelude::*;
+use crate::incl::*;
 
 pub struct EntsRegistry;
 impl Plugin for EntsRegistry {
     fn build(&self, app: &mut App) {
-        app
-            .add_plugin(PlayerRegistry);
+        app.add_plugin(PlayerRegistry);
     }
 }

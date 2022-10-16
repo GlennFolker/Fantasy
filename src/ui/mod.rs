@@ -1,16 +1,13 @@
-pub mod menu;
+pub mod comp;
+pub mod frag;
 
-mod func;
-pub use func::*;
-
-use bevy::prelude::*;
-use menu::MenuUiRegistry;
+use crate::incl::*;
 
 pub struct UiRegistry;
 impl Plugin for UiRegistry {
     fn build(&self, app: &mut App) {
         app
-            .add_plugin(MenuUiRegistry)
-            .add_plugin(UiFuncRegistry);
+            .add_plugin(UiCompRegistry)
+            .add_plugin(UiFragRegistry);
     }
 }

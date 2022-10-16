@@ -1,12 +1,4 @@
-use bevy::prelude::*;
-use iyes_loopless::prelude::*;
-use leafwing_input_manager::{
-    prelude::*,
-
-    plugin::InputManagerSystem
-};
-
-use super::logic::ents::Player;
+use crate::incl::*;
 
 pub struct InputRegistry;
 impl Plugin for InputRegistry {
@@ -16,7 +8,7 @@ impl Plugin for InputRegistry {
             .add_system_set_to_stage(CoreStage::PreUpdate, ConditionSet::new()
                 .before(InputManagerSystem::Update)
 
-                .with_system(bundle_input::<Player>)
+                .with_system(sys_bundle_input::<Player>)
                 .into()
             );
     }
@@ -42,7 +34,7 @@ pub fn input_map() -> InputMap<InputAction> {
         .build()
 }
 
-pub fn bundle_input<T: Component>(mut query: Query<&mut InputMap<InputAction>, Added<T>>) {
+pub fn sys_bundle_input<T: Component>(mut query: Query<&mut InputMap<InputAction>, Added<T>>) {
     for mut map in &mut query {
         *map = input_map();
     }
